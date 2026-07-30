@@ -1,0 +1,23 @@
+postgresql:
+  host: ${POSTGRES_HOST}
+  port: ${POSTGRES_PORT}
+  database: ${POSTGRES_DB}
+  user: ${POSTGRES_USER}
+  password: ${POSTGRES_PASSWORD}
+  schema: ${POSTGRES_SCHEMA:public}  # Default to 'public'
+  
+  # Connection pool settings
+  pool_size: 5
+  max_overflow: 10
+  pool_timeout: 30
+  pool_recycle: 3600
+  
+  # Connection parameters
+  connect_args:
+    connect_timeout: 10
+    application_name: "syniq_ingestion"
+    sslmode: ${POSTGRES_SSL_MODE:require}
+  
+  # Extraction settings
+  chunk_size: ${DEFAULT_CHUNK_SIZE:100000}
+  fetch_size: 10000

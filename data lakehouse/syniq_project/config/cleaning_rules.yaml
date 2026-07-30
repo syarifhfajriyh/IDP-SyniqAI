@@ -1,0 +1,202 @@
+# Silver Layer Cleaning Rules Configuration
+# This configuration file defines how data is cleaned when transitioning from Bronze to Silver layer
+
+# ============================================================================
+# 1. MISSING VALUE HANDLING
+# ============================================================================
+missing_values:
+  # Drop columns with missing values exceeding this threshold (0.0 to 1.0)
+  drop_threshold: 0.80
+  
+  # Method for filling numerical columns: median, mean, or forward_fill
+  numerical_fill_method: median
+  
+  # Method for filling categorical columns: specify a default value
+  categorical_fill_value: "Unknown"
+  
+  # Enable time-series forward fill for temporal data
+  time_series_forward_fill: true
+
+
+# ============================================================================
+# 2. DUPLICATE HANDLING
+# ============================================================================
+duplicates:
+  # Remove exact duplicates - keep first or last occurrence
+  keep_first: true
+  
+  # Fuzzy matching threshold for near-duplicates (0.0 to 1.0)
+  fuzzy_threshold: 0.90
+  
+  # Columns to consider for duplicate detection (empty = all columns)
+  key_columns: []
+  
+  # If multiple timestamps exist, keep the latest
+  timestamp_priority: true
+  timestamp_column: null  # Auto-detect or specify column name
+
+
+# ============================================================================
+# 3. OUTLIER DETECTION & TREATMENT
+# ============================================================================
+outliers:
+  # Method: iqr (Interquartile Range) or zscore (3-sigma)
+  method: iqr
+  
+  # IQR multiplier (1.5 = standard, 3.0 = extreme outliers only)
+  iqr_multiplier: 1.5
+  
+  # Z-score threshold (3.0 = 3-sigma, 2.5 = 2.5-sigma)
+  zscore_threshold: 3.0
+  
+  # Action: cap (clip to bounds), remove, or transform
+  action: cap
+  
+  # Lower percentile for capping (e.g., 1st percentile)
+  lower_percentile: 0.01
+  
+  # Upper percentile for capping (e.g., 99th percentile)
+  upper_percentile: 0.99
+  
+  # Add flag column for detected outliers
+  flag_outliers: true
+
+
+# ============================================================================
+# 4. DATA TYPE STANDARDIZATION
+# ============================================================================
+type_standardization:
+  # Date columns to standardize to ISO 8601 format (YYYY-MM-DD)
+  date_columns:
+    - created_at
+    - updated_at
+    - date_of_birth
+    - admission_date
+    - discharge_date
+  
+  # Phone columns to standardize to E.164 format (+60123456789)
+  phone_columns:
+    - phone_number
+    - mobile_number
+    - contact_number
+  
+  # Email columns to standardize (lowercase, trim)
+  email_columns:
+    - email_address
+    - email
+    - contact_email
+  
+  # Currency columns to standardize to decimal(10,2)
+  currency_columns:
+    - amount
+    - total_cost
+    - price
+
+
+# ============================================================================
+# 5. VALIDATION RULES
+# ============================================================================
+validation_rules:
+  # Age columns validation (0 ≤ age ≤ 120)
+  age_columns:
+    - age
+    - patient_age
+  
+  # Email validation using regex
+  email_columns:
+    - email_address
+    - contact_email
+  
+  # Custom numeric range validations
+  numeric_ranges:
+    # Column name: [min_value, max_value]
+    age: [0, 120]
+    temperature: [32, 42]
+    blood_pressure_systolic: [70, 200]
+    blood_pressure_diastolic: [40, 120]
+  
+  # String pattern validations
+  pattern_validations:
+    # Column name: regex pattern
+    phone_number: '^\+?[0-9\-\s\(\)]+$'
+    email_address: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$'
+  
+  # Enum validations (allowed values)
+  enum_validations:
+    # Column name: [allowed_values]
+    gender: [M, F, Other, Unknown]
+    status: [active, inactive, archived]
+    admission_type: [emergency, elective, urgent]
+
+
+# ============================================================================
+# 6. METADATA COLUMNS
+# ============================================================================
+metadata:
+  # Add processing metadata columns
+  add_source_system: true
+  add_ingestion_timestamp: true
+  add_processing_timestamp: true
+  add_quality_score: true
+  add_anomaly_flags: true
+  add_bronze_location: true
+  add_row_counts: true
+  
+  # Column name mappings
+  source_system_col: _source_system
+  ingestion_timestamp_col: _ingestion_timestamp
+  processing_timestamp_col: _processing_timestamp
+  quality_score_col: _quality_score
+  anomaly_col: _has_anomalies
+  bronze_location_col: _bronze_location
+
+
+# ============================================================================
+# 7. OUTPUT CONFIGURATION
+# ============================================================================
+output:
+  # Output format: parquet, csv, or both
+  format: parquet
+  
+  # Compression method for parquet: snappy, gzip, brotli, or lz4
+  compression: snappy
+  
+  # Partition by columns (for Iceberg/Delta Lake future use)
+  partition_columns:
+    - year
+    - month
+    - day
+  
+  # Overwrite existing files
+  overwrite: true
+
+
+# ============================================================================
+# 8. LOGGING & MONITORING
+# ============================================================================
+logging:
+  # Log level: DEBUG, INFO, WARNING, ERROR, CRITICAL
+  level: INFO
+  
+  # Enable detailed logging for each cleaning step
+  detailed_logging: true
+  
+  # Save cleaning summary report
+  save_summary: true
+  
+  # Summary output path
+  summary_output_path: silver/quality_reports/
+
+
+# ============================================================================
+# 9. QUALITY THRESHOLDS
+# ============================================================================
+quality_thresholds:
+  # Minimum acceptable quality score (0-100)
+  min_quality_score: 85.0
+  
+  # Maximum acceptable null percentage per column
+  max_null_percentage: 10.0
+  
+  # Maximum acceptable duplicate percentage
+  max_duplicate_percentage: 5.0

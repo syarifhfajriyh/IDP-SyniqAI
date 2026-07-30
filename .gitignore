@@ -1,0 +1,61 @@
+# --- Secrets / environment ---
+.env
+.env.*
+!.env.example
+data ingestion/Connector/*config*.json
+
+# --- Python ---
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+.venv-*/
+venv/
+
+# --- Node ---
+node_modules/
+gui/dist/
+npm-debug.log*
+
+# --- Big Data runtime binaries (fetched at setup time, never versioned) ---
+*.jar
+data lakehouse/syniq_env/
+
+# --- Streaming / job runtime state (regenerated, machine-specific) ---
+Kafka Integration/checkpoints/
+Kafka Integration/watermarks/
+Kafka Integration/logs/
+Kafka Integration/*.pid
+Kafka Integration/*.log
+checkpoints/
+logs/
+airflow_data/
+airflow_logs/
+*.log
+
+# --- Generated test-run output data (large, regenerable) ---
+data ingestion/Connector/bronze_layer/
+
+# --- Documentation and raw sample data (excluded from this repo by request) ---
+documentation/
+data ingestion/Connector/docs/
+data source/
+
+# --- Local runtime databases ---
+jobs.db
+*.sqlite
+*.sqlite3
+*.db
+
+# --- OS / editor ---
+.DS_Store
+Thumbs.db
+.vscode/
+.ivy2/
+.claude/
+
+# --- Backups / archives (never belong in git history) ---
+*.zip
+
+# --- Nested duplicate checkout (locked by OneDrive sync; excluded until manual cleanup) ---
+/SyniqAI/

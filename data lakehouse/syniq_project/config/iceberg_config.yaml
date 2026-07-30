@@ -1,0 +1,54 @@
+# Apache Iceberg Configuration for SyniqAI Lakehouse
+# Phase 4: Iceberg + Spark Integration
+
+catalog:
+  type: hadoop  # Using Hadoop catalog (file-based). Can upgrade to REST catalog later
+  name: syniq_iceberg
+  warehouse: s3a://syniqai-silver/iceberg  # MinIO bucket path for Silver layer Iceberg tables
+  
+  # S3 (MinIO) configuration
+  s3:
+    endpoint: http://localhost:9000
+    access_key_id: ${MINIO_ACCESS_KEY}  # From environment or config
+    secret_access_key: ${MINIO_SECRET_KEY}
+    path_style_access: true  # Required for MinIO compatibility
+    
+  # Table default properties
+  properties:
+    write.format.default: parquet
+    write.parquet.compression-codec: snappy
+    write.metadata.compression-codec: gzip
+    write.metadata.metrics.default: truncate(16)
+    
+    # Performance tuning
+    write.target-file-size-bytes: 536870912  # 512 MB per file
+    write.parquet.page-size-bytes: 1048576   # 1 MB page size
+    
+    # Partitioning (hidden partitioning - Iceberg handles automatically)
+    write.distribution-mode: hash
+    
+# Spark Configuration
+spark:
+  app_name: SyniqAI_Lakehouse_Iceberg
+  master: local[*]  # Use all available cores
+  
+  # Memory configuration
+  driver_memory: 2g
+  executor_memory: 2g
+  
+  # Iceberg Spark runtime JAR version
+  # CRITICAL: Use Iceberg 1.6.1 for Spark 3.5.0 compatibility
+  # DO NOT use Iceberg 1.10+ with Spark 3.5.0 (API incompatibility)
+  iceberg_version: 1.6.1
+  spark_version: 3.5
+  scala_version: 2.12
+  
+  # Additional Spark configs
+  configs:
+    spark.sql.adaptive.enabled: true
+    spark.sql.adaptive.coalescePartitions.enabled: true
+    spark.serializer: org.apache.spark.serializer.KryoSerializer
+    # Network timeout configurations (use milliseconds for Java 17 compatibility)
+    spark.network.timeout: 120000
+    spark.rpc.askTimeout: 120000
+    spark.rpc.lookupTimeout: 120000

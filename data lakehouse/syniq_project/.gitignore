@@ -1,0 +1,76 @@
+# ============================================================
+# Syniq Lakehouse - Git Ignore Rules
+# ============================================================
+
+# Environment variables (NEVER commit secrets)
+config/.env
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+.venv
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Logs
+logs/
+*.log
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Temporary files
+*.tmp
+*.bak
+temp/
+
+# SSL Certificates (if stored locally)
+*.pem
+*.crt
+*.key
+
+# Data files (never commit data)
+data/
+*.parquet
+*.csv
+*.json
+
+# Jupyter Notebooks checkpoints
+.ipynb_checkpoints/
+
+# ============================================================

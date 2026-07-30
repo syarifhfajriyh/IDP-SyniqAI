@@ -1,0 +1,89 @@
+# ============================================================
+# Syniq Lakehouse - Data Lineage Configuration
+# ============================================================
+# Configuration for data lineage tracking
+
+lineage:
+  # MinIO bucket for lineage storage
+  bucket: lineage
+  
+  # Enable lineage tracking
+  enabled: true
+  
+  # Tracking settings
+  tracking:
+    # Track transformations automatically
+    auto_track: true
+    
+    # Track column-level lineage
+    track_columns: true
+    
+    # Track row-level lineage (expensive, only for critical tables)
+    track_rows: false
+    
+    # Save transformation details
+    save_transformation_code: false
+  
+  # Lineage graph settings
+  graph:
+    # Maximum depth for upstream/downstream search
+    max_depth: 10
+    
+    # Include timestamp in lineage paths
+    include_timestamp: true
+    
+    # Graph format for visualization
+    # Options: json, graphviz, mermaid
+    export_format: json
+  
+  # Retention settings
+  retention:
+    # Keep lineage records (days, 0 = keep forever)
+    retention_days: 365
+    
+    # Archive old lineage to cold storage
+    enable_archival: false
+    
+    # Archive after days
+    archive_after_days: 90
+  
+  # Impact analysis
+  impact_analysis:
+    # Enable impact analysis queries
+    enabled: true
+    
+    # Cache impact analysis results (minutes)
+    cache_duration_minutes: 60
+  
+  # Visualization settings
+  visualization:
+    # Generate visual graphs
+    enabled: false
+    
+    # Graph visualization tool
+    # Options: graphviz, mermaid, d3
+    tool: mermaid
+    
+    # Node colors by layer
+    colors:
+      source: "#3498db"    # Blue
+      bronze: "#e67e22"    # Orange
+      silver: "#95a5a6"    # Silver
+      gold: "#f39c12"      # Gold
+  
+  # Metadata to capture
+  metadata:
+    # Capture execution time
+    capture_execution_time: true
+    
+    # Capture user/job information
+    capture_user_info: true
+    
+    # Capture data quality metrics
+    capture_quality_metrics: true
+    
+    # Capture row counts
+    capture_row_counts: true
+    
+    # Capture schema changes
+    capture_schema_changes: true

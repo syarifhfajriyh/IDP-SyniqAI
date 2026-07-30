@@ -1,0 +1,11 @@
+# TSD Media Pipeline - Python Dependencies
+# Install with: pip install -r requirements.txt
+
+# MongoDB driver with DNS support for Atlas (mongodb+srv://)
+pymongo[srv]>=4.0.0
+
+# Environment variable management
+python-dotenv>=0.19.0
+
+# Note: tkinter comes bundled with Python, no need to install separately
+# Note: pymongo[srv] includes dnspython for Atlas connection support

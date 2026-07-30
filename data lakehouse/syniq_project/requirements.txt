@@ -1,0 +1,69 @@
+# ============================================================
+# Syniq Lakehouse - Python Dependencies
+# ============================================================
+
+# Core data processing
+pandas>=2.0.0
+pyarrow>=12.0.0
+numpy>=1.24.0
+scipy>=1.11.0  # Statistical analysis for Gold layer EDA
+
+# Apache Spark (for Silver/Gold processing at scale)
+pyspark>=3.5.0
+
+# Apache Iceberg (for ACID transactions and time travel)
+pyiceberg[pyarrow,sql-postgres]==0.5.1  # Iceberg Python SDK
+
+# Database drivers
+sqlalchemy>=2.0.0
+psycopg2-binary>=2.9.0
+pymysql>=1.1.0
+pymongo[srv]>=4.5.0  # [srv] includes dnspython for Atlas (mongodb+srv://)
+
+# Cloud storage
+s3fs>=2023.0.0
+boto3>=1.28.0
+minio>=7.1.0
+
+# Configuration management
+pyyaml>=6.0
+python-dotenv>=1.0.0
+
+# Logging (required for utils/logger.py)
+loguru>=0.7.0
+
+# Retry and resilience (optional - we have custom retry)
+tenacity>=8.2.0
+
+# Data validation
+great-expectations>=0.17.0  # Optional for Phase 2
+pydantic>=2.0.0
+
+# Unstructured data processing
+Pillow>=10.0.0  # Image processing
+opencv-python>=4.8.0  # Advanced image/video analysis
+pdfplumber>=0.10.0  # PDF text extraction
+PyPDF2>=3.0.0  # PDF metadata extraction
+librosa>=0.10.0  # Audio analysis
+soundfile>=0.12.0  # Audio file I/O
+sentence-transformers>=2.2.0  # Text/document embeddings
+langdetect>=1.0.9  # Language detection for text
+textblob>=0.17.0  # Sentiment analysis
+nltk>=3.8.0  # Natural language processing
+python-magic-bin>=0.4.14  # File type detection (Windows compatible)
+
+# Utilities
+tqdm>=4.65.0  # Progress bars
+click>=8.1.0  # CLI interface
+
+# Testing (development only)
+pytest>=7.4.0
+pytest-cov>=4.1.0
+pytest-mock>=3.11.0
+
+# Code quality (development only)
+black>=23.7.0
+flake8>=6.1.0
+mypy>=1.5.0
+
+# ============================================================

@@ -1,0 +1,54 @@
+# ============================================================
+# Syniq Lakehouse - Catalog Configuration
+# ============================================================
+# Configuration for metadata catalog management
+
+catalog:
+  # MinIO bucket for catalog storage
+  bucket: catalog
+  
+  # Enable catalog registration during ingestion
+  enabled: true
+  
+  # Schema versioning settings
+  versioning:
+    # Auto-increment version on schema changes
+    auto_version: true
+    
+    # Allow breaking schema changes (removes columns, type changes)
+    allow_breaking_changes: false
+    
+    # Save schema history
+    keep_history: true
+  
+  # Tagging settings
+  tags:
+    # Auto-add tags during registration
+    auto_tag: true
+    
+    # Default tags to add
+    default_tags:
+      managed_by: syniq
+      environment: production
+  
+  # Discovery settings
+  discovery:
+    # Index refresh interval (seconds)
+    index_refresh_seconds: 300
+    
+    # Enable full-text search on table names
+    enable_search: true
+
+# Schema evolution policies
+schema_evolution:
+  # Policies: strict, moderate, permissive
+  # strict: Only allow adding columns
+  # moderate: Allow adding/renaming columns
+  # permissive: Allow all changes (not recommended)
+  policy: moderate
+  
+  # Notify on schema changes
+  notify_on_change: true
+  
+  # Compatibility check
+  compatibility_check: true

@@ -1,0 +1,171 @@
+---
+# ============================================================
+# Syniq Lakehouse - Ingestion Configuration (EXAMPLE)
+# ============================================================
+# This is a starter template. Customize for your databases.
+# ============================================================
+
+sources:
+  # ========================================================
+  # PostgreSQL Example
+  # ========================================================
+  postgres_prod:
+    enabled: true                    # Set to false to disable
+    connector_type: postgres         # Must match connector name
+    
+    entities:
+      customers:
+        enabled: true
+        extraction:
+          mode: full                 # full | incremental
+          batch_size: 5000           # Rows per batch
+          # watermark_field: updated_at    # For incremental mode
+          # watermark_value: "2024-01-01"  # Start date for incremental
+        
+        validation_rules:            # Optional data quality checks
+          - type: not_null
+            columns: [customer_id, name, email]
+            severity: ERROR          # ERROR | WARNING | INFO
+          
+          - type: pattern
+            column: email
+            pattern: "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+            severity: WARNING
+          
+          - type: range
+            column: age
+            min: 0
+            max: 120
+            severity: WARNING
+      
+      orders:
+        enabled: true
+        extraction:
+          mode: full
+          batch_size: 10000
+        
+        validation_rules:
+          - type: not_null
+            columns: [order_id, customer_id, order_date]
+            severity: ERROR
+          
+          - type: range
+            column: total_amount
+            min: 0
+            severity: ERROR
+      
+      products:
+        enabled: false               # Disabled - won't be ingested
+        extraction:
+          mode: full
+          batch_size: 1000
+  
+  # ========================================================
+  # MariaDB Example
+  # ========================================================
+  mariadb_prod:
+    enabled: true
+    connector_type: mariadb
+    
+    entities:
+      invoices:
+        enabled: true
+        extraction:
+          mode: full
+          batch_size: 5000
+        
+        validation_rules:
+          - type: not_null
+            columns: [invoice_id, invoice_date]
+            severity: ERROR
+      
+      payments:
+        enabled: true
+        extraction:
+          mode: incremental          # Only new/updated records
+          batch_size: 5000
+          watermark_field: payment_date
+          watermark_value: "2024-01-01"
+        
+        validation_rules:
+          - type: not_null
+            columns: [payment_id, amount]
+            severity: ERROR
+          
+          - type: range
+            column: amount
+            min: 0
+            severity: ERROR
+  
+  # ========================================================
+  # MariaDB Cloud (SkySQL) Example
+  # ========================================================
+  mariadb_cloud:
+    enabled: false                   # Disabled by default
+    connector_type: mariadb_cloud
+    
+    entities:
+      transactions:
+        enabled: true
+        extraction:
+          mode: full
+          batch_size: 10000
+        
+        validation_rules:
+          - type: not_null
+            columns: [transaction_id]
+            severity: ERROR
+  
+  # ========================================================
+  # MongoDB Example
+  # ========================================================
+  mongodb_prod:
+    enabled: false                   # Disabled by default
+    connector_type: mongodb
+    
+    entities:
+      user_events:
+        enabled: true
+        extraction:
+          mode: full
+          batch_size: 5000
+        
+        validation_rules:
+          - type: not_null
+            columns: [_id, event_type, timestamp]
+            severity: ERROR
+      
+      sessions:
+        enabled: true
+        extraction:
+          mode: incremental
+          batch_size: 5000
+          watermark_field: created_at
+          watermark_value: "2024-01-01T00:00:00Z"
+
+# ============================================================
+# Configuration Notes:
+# ============================================================
+#
+# connector_type options:
+#   - postgres / postgresql
+#   - mariadb
+#   - mariadb_cloud
+#   - mongodb / mongo
+#
+# extraction.mode:
+#   - full: Extract all data every time
+#   - incremental: Only extract new/updated records
+#
+# validation_rules types:
+#   - not_null: Columns must have values
+#   - range: Numeric values within min/max
+#   - pattern: String matches regex pattern
+#   - unique: Values must be unique
+#
+# severity levels:
+#   - ERROR: Blocks ingestion if validation fails
+#   - WARNING: Logs warning but continues
+#   - INFO: Informational only
+#
+# ============================================================

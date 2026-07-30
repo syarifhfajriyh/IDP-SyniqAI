@@ -1,0 +1,36 @@
+# Kafka Integration Requirements
+# ================================
+# Core dependencies for SYINIQ Kafka Integration and CDC Pipeline
+
+# Kafka client library
+kafka-python>=2.0.2
+
+# Requests library for Kafka Connect REST API
+requests>=2.31.0
+
+# Python environment variable management
+python-dotenv>=1.0.0
+
+# =============================================================================
+# CDC Pipeline Dependencies (Phase 5A)
+# =============================================================================
+
+# Spark for streaming CDC consumers
+pyspark>=3.5.0
+
+# Apache Iceberg for CDC → Bronze streaming
+pyiceberg[pyarrow,sql-postgres]==0.5.1  # Iceberg Python SDK with PostgreSQL catalog support
+
+# Database connectors for CDC testing and configuration
+psycopg2-binary>=2.9.0      # PostgreSQL connector
+mysql-connector-python>=8.0.0  # MariaDB/MySQL connector
+
+# MongoDB for custom CDC connector
+pymongo>=4.0.0
+
+# AWS S3 / MinIO for custom CDC connector
+boto3>=1.26.0
+botocore>=1.29.0
+
+# Additional utilities
+dataclasses-json>=0.5.9     # For dataclass serialization

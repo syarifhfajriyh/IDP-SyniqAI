@@ -1,0 +1,94 @@
+# ============================================================
+# Syniq Lakehouse - Data Quality Configuration
+# ============================================================
+# Configuration for data quality profiling and validation
+
+quality:
+  # MinIO bucket for quality profiles
+  bucket: quality
+  
+  # Enable profiling during ingestion
+  enabled: true
+  
+  # Profiling settings
+  profiling:
+    # Sample size for large datasets (0 = profile all rows)
+    sample_size: 10000
+    
+    # Generate profiles after every ingestion
+    auto_profile: true
+    
+    # Save profile history
+    keep_history: true
+    
+    # Profile retention (days, 0 = keep forever)
+    retention_days: 90
+  
+  # Quality scoring weights (must sum to 1.0)
+  scoring:
+    completeness_weight: 0.4   # No missing values
+    uniqueness_weight: 0.3     # No duplicates
+    validity_weight: 0.3       # No outliers/invalid data
+  
+  # Quality thresholds
+  thresholds:
+    # Minimum acceptable quality score (0-100)
+    minimum_score: 70.0
+    
+    # Maximum allowed missing percentage per column
+    max_missing_percentage: 20.0
+    
+    # Maximum allowed duplicate percentage
+    max_duplicate_percentage: 5.0
+    
+    # Maximum allowed outlier percentage
+    max_outlier_percentage: 10.0
+  
+  # Alerting settings
+  alerts:
+    # Enable alerts for quality issues
+    enabled: false
+    
+    # Alert on score below threshold
+    alert_on_low_score: true
+    
+    # Alert on high missing values
+    alert_on_missing: true
+    
+    # Alert channels (email, slack, webhook)
+    channels:
+      - console  # Print to console
+      # - email: quality-alerts@example.com
+      # - slack: #data-quality
+  
+  # Column profiling settings
+  column_profiling:
+    # Profile numeric columns
+    numeric:
+      enabled: true
+      compute_statistics: true
+      detect_outliers: true
+      outlier_method: iqr  # iqr, zscore, isolation_forest
+    
+    # Profile categorical columns
+    categorical:
+      enabled: true
+      max_cardinality: 100  # Skip if more unique values
+      top_n_values: 10      # Show top N values
+    
+    # Profile datetime columns
+    datetime:
+      enabled: true
+      detect_gaps: true
+      check_future_dates: true
+  
+  # Validation rules
+  validation:
+    # Run validation before profiling
+    enabled: true
+    
+    # Stop ingestion on validation failure
+    fail_on_error: false
+    
+    # Validation severity levels to fail on
+    fail_on: [error]  # error, warning, info

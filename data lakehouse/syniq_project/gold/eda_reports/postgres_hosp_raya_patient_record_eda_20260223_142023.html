@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EDA Report - postgres.hosp_raya_patient_record</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            border-radius: 10px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 {
+            margin: 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            margin: 10px 0 0 0;
+            opacity: 0.9;
+        }
+        .section {
+            background: white;
+            padding: 25px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .section h2 {
+            color: #667eea;
+            border-bottom: 3px solid #667eea;
+            padding-bottom: 10px;
+            margin-top: 0;
+        }
+        .metric-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .metric-card {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 4px solid #667eea;
+        }
+        .metric-card .label {
+            font-size: 0.9em;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .metric-card .value {
+            font-size: 2em;
+            font-weight: bold;
+            color: #333;
+            margin-top: 5px;
+        }
+        .quality-score {
+            font-size: 3em;
+            font-weight: bold;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .quality-excellent { color: #28a745; }
+        .quality-good { color: #17a2b8; }
+        .quality-fair { color: #ffc107; }
+        .quality-poor { color: #dc3545; }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+        th {
+            background-color: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+        tr:hover {
+            background-color: #f5f5f5;
+        }
+        .insight {
+            background: #e7f3ff;
+            border-left: 4px solid #2196F3;
+            padding: 15px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        .correlation-item {
+            padding: 10px;
+            margin: 5px 0;
+            background: #f8f9fa;
+            border-radius: 4px;
+        }
+        .strong-positive { border-left: 4px solid #28a745; }
+        .strong-negative { border-left: 4px solid #dc3545; }
+        .footer {
+            text-align: center;
+            color: #666;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>📊 Exploratory Data Analysis Report</h1>
+        <p><strong>Table:</strong> postgres.hosp_raya_patient_record</p>
+        <p><strong>Analysis Date:</strong> 2026-02-23T14:20:23.094460</p>
+    </div>
+
+    <div class="section">
+        <h2>📋 Basic Information</h2>
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="label">Total Rows</div>
+                <div class="value">4</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Total Columns</div>
+                <div class="value">13</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Memory Usage</div>
+                <div class="value">0.00 MB</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Duplicate Rows</div>
+                <div class="value">0</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>✅ Data Quality Assessment</h2>
+        <div class="quality-score quality-excellent">
+            100.0/100
+        </div>
+        <div class="metric-grid">
+            <div class="metric-card">
+                <div class="label">Completeness</div>
+                <div class="value">100.0%</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Missing Values</div>
+                <div class="value">0</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Missing %</div>
+                <div class="value">0.00%</div>
+            </div>
+            <div class="metric-card">
+                <div class="label">Duplicates %</div>
+                <div class="value">0.00%</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="section">
+        <h2>📊 Column Analysis</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Column Name</th>
+                    <th>Type</th>
+                    <th>Non-Null</th>
+                    <th>Null %</th>
+                    <th>Unique</th>
+                    <th>Key Statistics</th>
+                </tr>
+            </thead>
+            <tbody>
+
+                <tr>
+                    <td><strong>record_id</strong></td>
+                    <td>int64</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>4</td>
+                    <td>Mean: 102.50, Std: 1.29</td>
+                </tr>
+
+                <tr>
+                    <td><strong>user_id</strong></td>
+                    <td>int64</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>4</td>
+                    <td>Mean: 2.50, Std: 1.29</td>
+                </tr>
+
+                <tr>
+                    <td><strong>medical_info</strong></td>
+                    <td>string</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>4</td>
+                    <td>Top: {"age": 45, "active": true, "patient_name": "Syarifah", "contact_info": {"email": "sarah@example.com", "address": {"street": "123 Tech Blvd", "city": "Cyberjaya", "zip": "63000"}}, "emergency_contact": {"name": "Kyle Reese", "relationship": "Spouse", "phone": {"home": "+603-555-0101", "mobile": "+6012-555-0199"}}}</td>
+                </tr>
+
+                <tr>
+                    <td><strong>_ingestion_timestamp</strong></td>
+                    <td>datetime64[us]</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td><strong>_source_system</strong></td>
+                    <td>object</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td>Top: postgres</td>
+                </tr>
+
+                <tr>
+                    <td><strong>_entity</strong></td>
+                    <td>object</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td>Top: hosp_raya_patient_record</td>
+                </tr>
+
+                <tr>
+                    <td><strong>_chunk_id</strong></td>
+                    <td>int64</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>4</td>
+                    <td>Mean: 2.50, Std: 1.29</td>
+                </tr>
+
+                <tr>
+                    <td><strong>_processing_timestamp</strong></td>
+                    <td>datetime64[us]</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td></td>
+                </tr>
+
+                <tr>
+                    <td><strong>_quality_score</strong></td>
+                    <td>float64</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td>Mean: 100.00, Std: 0.00</td>
+                </tr>
+
+                <tr>
+                    <td><strong>_has_anomalies</strong></td>
+                    <td>bool</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td>Top: False</td>
+                </tr>
+
+                <tr>
+                    <td><strong>_bronze_location</strong></td>
+                    <td>object</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td>Top: bronze/postgres/hosp_raya_patient_record/</td>
+                </tr>
+
+                <tr>
+                    <td><strong>_rows_processed</strong></td>
+                    <td>int64</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td>Mean: 4.00, Std: 0.00</td>
+                </tr>
+
+                <tr>
+                    <td><strong>_rows_remaining</strong></td>
+                    <td>int64</td>
+                    <td>4</td>
+                    <td>0.0%</td>
+                    <td>1</td>
+                    <td>Mean: 4.00, Std: 0.00</td>
+                </tr>
+
+            </tbody>
+        </table>
+    </div>
+
+    <div class="section">
+        <h2>🔗 Strong Correlations</h2>
+
+        <div class="correlation-item strong-positive">
+            <strong>record_id</strong> ↔️ <strong>user_id</strong>: 
+            1.000
+        </div>
+
+        <div class="correlation-item strong-positive">
+            <strong>record_id</strong> ↔️ <strong>_chunk_id</strong>: 
+            1.000
+        </div>
+
+        <div class="correlation-item strong-positive">
+            <strong>user_id</strong> ↔️ <strong>_chunk_id</strong>: 
+            1.000
+        </div>
+
+    </div>
+
+    <div class="section">
+        <h2>💡 Key Insights</h2>
+
+        <div class="insight">
+            Data quality looks good - no major issues detected
+        </div>
+
+    </div>
+
+    <div class="footer">
+        <p>Generated by Syniq Data Lakehouse - Gold Layer EDA Engine</p>
+        <p>© 2026 All rights reserved</p>
+    </div>
+</body>
+</html>

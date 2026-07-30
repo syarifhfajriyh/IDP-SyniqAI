@@ -1,0 +1,190 @@
+---
+# ============================================================
+# Syniq Lakehouse - Ingestion Configuration
+# ============================================================
+# Controls which tables to ingest and how
+# ============================================================
+
+postgresql:
+  source_name: "postgres"
+  enabled: true
+  
+  tables:
+    - name: "policies"
+      enabled: true
+      primary_key: "policy_id"
+      incremental_column: "updated_at"  # For future CDC
+      business_key: "policy_number"
+      chunk_size: 100000
+      extract_mode: "full"  # full | incremental
+      schedule: "0 2 * * *"  # Daily at 2 AM
+      
+    - name: "customers"
+      enabled: true
+      primary_key: "customer_id"
+      incremental_column: "last_modified"
+      business_key: "customer_code"
+      chunk_size: 50000
+      extract_mode: "full"
+      schedule: "0 2 * * *"
+      
+    - name: "agents"
+      enabled: true
+      primary_key: "agent_id"
+      incremental_column: "updated_at"
+      business_key: "agent_code"
+      chunk_size: 10000
+      extract_mode: "full"
+      schedule: "0 3 * * *"
+      
+    - name: "internal_audit_log"
+      enabled: false  # Skip sensitive tables
+      reason: "Contains PII - approved exclusion"
+
+# ============================================================
+
+mariadb:
+  source_name: "mariadb"
+  enabled: true
+  
+  tables:
+    - name: "claims"
+      enabled: true
+      primary_key: "claim_id"
+      incremental_column: "claim_date"
+      business_key: "claim_number"
+      chunk_size: 100000
+      extract_mode: "full"
+      schedule: "0 4 * * *"
+      
+    - name: "claim_payments"
+      enabled: true
+      primary_key: "payment_id"
+      incremental_column: "payment_date"
+      business_key: "payment_reference"
+      chunk_size: 150000
+      extract_mode: "full"
+      schedule: "0 4 * * *"
+      
+    - name: "providers"
+      enabled: true
+      primary_key: "provider_id"
+      incremental_column: "updated_at"
+      business_key: "provider_code"
+      chunk_size: 5000
+      extract_mode: "full"
+      schedule: "0 5 * * *"
+
+# ============================================================
+
+mariadb_cloud:
+  source_name: "mariadb_cloud"
+  enabled: true
+  
+  tables:
+    - name: "policy_documents"
+      enabled: true
+      primary_key: "document_id"
+      incremental_column: "upload_date"
+      business_key: "document_reference"
+      chunk_size: 50000
+      extract_mode: "full"
+      schedule: "0 6 * * *"
+      
+    - name: "underwriting_rules"
+      enabled: true
+      primary_key: "rule_id"
+      incremental_column: "modified_date"
+      business_key: "rule_code"
+      chunk_size: 1000
+      extract_mode: "full"
+      schedule: "0 6 * * *"
+
+# ============================================================
+
+mongodb:
+  source_name: "mongodb"
+  enabled: true
+  
+  collections:
+    - name: "customer_interactions"
+      enabled: true
+      primary_key: "_id"
+      incremental_field: "timestamp"
+      business_key: "interaction_id"
+      batch_size: 1000
+      extract_mode: "full"
+      schedule: "0 7 * * *"
+      flatten_nested: true
+      max_depth: 3
+      
+    - name: "policy_events"
+      enabled: true
+      primary_key: "_id"
+      incremental_field: "event_date"
+      business_key: "event_id"
+      batch_size: 5000
+      extract_mode: "full"
+      schedule: "0 7 * * *"
+      flatten_nested: true
+      max_depth: 2
+      
+    - name: "customer_preferences"
+      enabled: true
+      primary_key: "_id"
+      incremental_field: "updated_at"
+      business_key: "customer_id"
+      batch_size: 10000
+      extract_mode: "full"
+      schedule: "0 8 * * *"
+      flatten_nested: true
+      max_depth: 2
+
+# ============================================================
+
+aws_s3:
+  source_name: "s3"
+  enabled: true
+  
+  sources:
+    - name: "policy_documents"
+      enabled: true
+      path: "incoming/policies/"
+      file_pattern: "*.pdf"
+      extract_mode: "mirror"  # Copy to Bronze
+      schedule: "*/30 * * * *"  # Every 30 minutes
+      
+    - name: "claim_attachments"
+      enabled: true
+      path: "incoming/claims/"
+      file_pattern: "*.{jpg,jpeg,png,pdf}"
+      extract_mode: "mirror"
+      schedule: "*/30 * * * *"
+      
+    - name: "daily_reports"
+      enabled: true
+      path: "reports/"
+      file_pattern: "report_*.csv"
+      extract_mode: "parse"  # Parse CSV to Parquet
+      schedule: "0 9 * * *"
+
+# ============================================================
+
+# Global ingestion settings
+global:
+  max_parallel_sources: 2
+  max_parallel_tables: 3
+  retry_attempts: 3
+  retry_backoff_factor: 2
+  timeout_seconds: 3600
+  enable_schema_validation: true
+  enable_data_quality_checks: true
+  
+  # Notification settings
+  notifications:
+    enabled: true
+    on_failure: true
+    on_success: false
+    email: "data-engineering@company.com"
+
+# ============================================================

@@ -1,0 +1,62 @@
+---
+# ============================================================
+# Syniq Lakehouse - MinIO Storage Configuration
+# ============================================================
+
+minio:
+  endpoint: localhost:9000
+  access_key: admin
+  secret_key: password123
+  secure: false
+  region: us-east-1
+  
+  # Bucket configuration
+  buckets:
+    bronze: "bronze"
+    silver: "silver"
+    gold: "gold"
+  
+  # Path structure
+  paths:
+    bronze: "bronze"
+    silver: "silver"
+    gold: "gold"
+    metadata: "_metadata"
+    logs: "_logs"
+  
+  # Partitioning strategy
+  partitioning:
+    bronze:
+      - "source_system"
+      - "table_name"
+      - "ingestion_date=YYYY-MM-DD"
+    
+    silver:
+      - "table_name"
+      - "business_date=YYYY-MM-DD"
+    
+    gold:
+      - "feature_type"
+      - "model_version"
+      - "feature_date=YYYY-MM-DD"
+  
+  # File format settings
+  file_format:
+    type: "parquet"
+    compression: "snappy"
+    row_group_size: 128000000  # 128MB
+    page_size: 1048576  # 1MB
+    
+  # Retention policies (days)
+  retention:
+    bronze: 90
+    silver: 365
+    gold: 730
+    logs: 30
+  
+  # Upload settings
+  multipart_threshold: 67108864  # 64MB
+  multipart_chunksize: 67108864  # 64MB
+  max_concurrency: 10
+
+# ============================================================
